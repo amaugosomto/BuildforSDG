@@ -3,7 +3,7 @@ const getInfectionsByRequestedTime = (periodType, timeToElapse) => {
 
   switch (periodType) {
     case 'days':
-      noOfDays = timeToElapse / 7;
+      noOfDays = timeToElapse / 3;
       break;
 
     case 'weeks':
