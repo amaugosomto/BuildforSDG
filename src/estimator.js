@@ -3,22 +3,22 @@ const getInfectionsByRequestedTime = (periodType, timeToElapse) => {
 
   switch (periodType) {
     case 'days':
-      noOfDays = timeToElapse;
+      noOfDays = timeToElapse / 7;
       break;
 
     case 'weeks':
-      noOfDays = timeToElapse * 7;
+      noOfDays = (timeToElapse * 7) / 3;
       break;
 
     case 'months':
-      noOfDays = timeToElapse * 30;
+      noOfDays = (timeToElapse * 30) / 3;
       break;
 
     default:
       break;
   }
 
-  return (noOfDays ** 10);
+  return (2 ** Math.trunc(noOfDays));
 };
 
 const covid19ImpactEstimator = (data) => {
@@ -27,17 +27,13 @@ const covid19ImpactEstimator = (data) => {
     data: input,
     impact: {
       currentlyInfected: data.reportedCases * 10,
-      infectionsByRequestedTime: Math.trunc(
-        (data.reportedCases * 10)
-        * getInfectionsByRequestedTime(data.periodType, data.timeToElapse)
-      )
+      infectionsByRequestedTime: (data.reportedCases * 10)
+      * getInfectionsByRequestedTime(data.periodType, data.timeToElapse)
     },
     severeImpact: {
       currentlyInfected: data.reportedCases * 50,
-      infectionsByRequestedTime: Math.trunc(
-        (data.reportedCases * 50)
-        * getInfectionsByRequestedTime(data.periodType, data.timeToElapse)
-      )
+      infectionsByRequestedTime: (data.reportedCases * 50)
+      * getInfectionsByRequestedTime(data.periodType, data.timeToElapse)
     }
   };
 };
