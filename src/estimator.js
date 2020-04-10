@@ -22,22 +22,22 @@ const getInfectionsByRequestedTime = (periodType, timeToElapse) => {
 };
 
 const covid19ImpactEstimator = (data) => {
-  let currentlyInfected = data.reportedCases * 10;
-  let severeCurrentlyInfected = data.reportedCases * 50;
-  let infectionsByRequestedTime = currentlyInfected * getInfectionsByRequestedTime(
+  const currentlyInfected = data.reportedCases * 10;
+  const severeCurrentlyInfected = data.reportedCases * 50;
+  const infectionsByRequestedTime = currentlyInfected * getInfectionsByRequestedTime(
     data.periodType,
     data.timeToElapse
   );
-  let severeInfectionsByRequestedTime = severeCurrentlyInfected * getInfectionsByRequestedTime(
+  const severeInfectionsByRequestedTime = severeCurrentlyInfected * getInfectionsByRequestedTime(
     data.periodType,
     data.timeToElapse
   );
-  let impactSevereCasesByRequestedTime = infectionsByRequestedTime * 0.15;
-  let severeImpactSevereCasesByRequestedTime = severeInfectionsByRequestedTime * 0.15;
-  let availableBedSpace = data.totalHospitalBeds * 0.35;
-  let hospitalBedsByRequestedTime = availableBedSpace - impactSevereCasesByRequestedTime;
-  let severeHospitalBedsByRequestedTime =
-    availableBedSpace - severeHospitalBedsByRequestedTime;
+  const impactSevereCasesByRequestedTime = infectionsByRequestedTime * 0.15;
+  const severeImpactSevereCasesByRequestedTime = severeInfectionsByRequestedTime * 0.15;
+  const availableBedSpace = data.totalHospitalBeds * 0.35;
+  const hospitalBedsByRequestedTime = availableBedSpace - impactSevereCasesByRequestedTime;
+  const severeHospitalBedsByRequestedTime = availableBedSpace 
+  - severeHospitalBedsByRequestedTime;
 
   return {
     data,
