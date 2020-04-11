@@ -17,7 +17,6 @@ const daysNormalize = (periodType, timeToElapse) => {
     default:
       break;
   }
-
   return (Math.trunc(noOfDays));
 };
 
