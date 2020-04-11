@@ -3,29 +3,33 @@ const daysNormalize = (periodType, timeToElapse) => {
 
   switch (periodType) {
     case 'days':
-      noOfDays = timeToElapse / 3;
+      noOfDays = timeToElapse;
       break;
 
     case 'weeks':
-      noOfDays = (timeToElapse * 7) / 3;
+      noOfDays = timeToElapse * 7;
       break;
 
     case 'months':
-      noOfDays = (timeToElapse * 30) / 3;
+      noOfDays = timeToElapse * 30;
       break;
 
     default:
       break;
   }
-  return (Math.trunc(noOfDays));
+  return noOfDays;
 };
 
 const covid19ImpactEstimator = (data) => {
   const currentlyInfected = data.reportedCases * 10;
   const severeCurrentlyInfected = data.reportedCases * 50;
   const noOfDays = daysNormalize(data.periodType, data.timeToElapse);
-  const infectionsByRequestedTime = Math.trunc(currentlyInfected * (2 ** noOfDays));
-  const severeInfectionsByRequestedTime = Math.trunc(severeCurrentlyInfected * (2 ** noOfDays));
+  const infectionsByRequestedTime = Math.trunc(currentlyInfected * (2 ** Math.trunc(
+    noOfDays / 3
+  )));
+  const severeInfectionsByRequestedTime = Math.trunc(severeCurrentlyInfected * (2 ** Math.trunc(
+    noOfDays / 3
+  )));
   const impactSevereCasesByRequestedTime = infectionsByRequestedTime * 0.15;
   const severeImpactSevereCasesByRequestedTime = severeInfectionsByRequestedTime * 0.15;
   const availableBedSpace = data.totalHospitalBeds * 0.35;
@@ -41,12 +45,10 @@ const covid19ImpactEstimator = (data) => {
   const severeCasesForVentilatorsByRequestedTime = Math.trunc(
     severeInfectionsByRequestedTime * 0.02
   );
-  const dollarsInFlight = Math.round(((infectionsByRequestedTime
-    * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD) * noOfDays
-  ) * 100) / 100;
-  const severeDollarsInFlight = Math.round(((severeInfectionsByRequestedTime
-    * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD) * noOfDays
-  ) * 100) / 100;
+  const dollarsInFlight = (infectionsByRequestedTime
+    * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD) / noOfDays;
+  const severeDollarsInFlight = (severeInfectionsByRequestedTime
+    * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD) / noOfDays;
 
   return {
     data,
