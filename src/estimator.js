@@ -20,11 +20,6 @@ const daysNormalize = (periodType, timeToElapse) => {
   return (Math.trunc(noOfDays));
 };
 
-const getHospialBedsByRequestedTime = (bedSpaces, casesByRequestedTime) => {
-  const availableBedSpace = bedSpaces * 0.35;
-  return (Math.trunc(availableBedSpace - casesByRequestedTime));
-};
-
 const covid19ImpactEstimator = (data) => {
   const currentlyInfected = data.reportedCases * 10;
   const severeCurrentlyInfected = data.reportedCases * 50;
@@ -33,13 +28,12 @@ const covid19ImpactEstimator = (data) => {
   const severeInfectionsByRequestedTime = severeCurrentlyInfected * (2 ** noOfDays);
   const impactSevereCasesByRequestedTime = infectionsByRequestedTime * 0.15;
   const severeImpactSevereCasesByRequestedTime = severeInfectionsByRequestedTime * 0.15;
-  const hospitalBedsByRequestedTime = getHospialBedsByRequestedTime(
-    data.totalHospitalBeds,
-    impactSevereCasesByRequestedTime
+  const availableBedSpace = data.totalHospitalBeds * 0.35;
+  const hospitalBedsByRequestedTime = Math.trunc(
+    availableBedSpace - impactSevereCasesByRequestedTime
   );
-  const severeHospitalBedsByRequestedTime = getHospialBedsByRequestedTime(
-    data.totalHospitalBeds,
-    impactSevereCasesByRequestedTime
+  const severeHospitalBedsByRequestedTime = Math.trunc(
+    availableBedSpace - severeImpactSevereCasesByRequestedTime
   );
   const casesForICUByRequestedTime = infectionsByRequestedTime * 0.05;
   const severeCasesForICUByRequestedTime = severeInfectionsByRequestedTime * 0.05;
