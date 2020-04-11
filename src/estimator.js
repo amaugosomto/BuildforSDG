@@ -37,12 +37,12 @@ const covid19ImpactEstimator = (data) => {
   );
   const casesForICUByRequestedTime = Math.trunc(infectionsByRequestedTime * 0.06);
   const severeCasesForICUByRequestedTime = Math.trunc(severeInfectionsByRequestedTime * 0.05);
-  // const casesForVentilatorsByRequestedTime = casesForICUByRequestedTime * 0.02;
-  // const severeCasesForVentilatorsByRequestedTime = severeCasesForICUByRequestedTime * 0.02;
-  // const dollarsInFlight = Math.round(((infectionsByRequestedTime
-  //   * 0.65 * data.region.avgDailyIncomeInUSD) * noOfDays) * 100) / 100;
-  // const severeDollarsInFlight = Math.round(((severeInfectionsByRequestedTime
-  //   * 0.65 * data.region.avgDailyIncomeInUSD) * noOfDays) * 100) / 100;
+  const casesForVentilatorsByRequestedTime = casesForICUByRequestedTime * 0.02;
+  const severeCasesForVentilatorsByRequestedTime = severeCasesForICUByRequestedTime * 0.02;
+  const dollarsInFlight = Math.round(((infectionsByRequestedTime
+    * 0.65 * data.region.avgDailyIncomeInUSD) * noOfDays) * 100) / 100;
+  const severeDollarsInFlight = Math.round(((severeInfectionsByRequestedTime
+    * 0.65 * data.region.avgDailyIncomeInUSD) * noOfDays) * 100) / 100;
 
   return {
     data,
@@ -51,18 +51,18 @@ const covid19ImpactEstimator = (data) => {
       infectionsByRequestedTime,
       severeCasesByRequestedTime: impactSevereCasesByRequestedTime,
       hospitalBedsByRequestedTime,
-      casesForICUByRequestedTime
-      // casesForVentilatorsByRequestedTime,
-      // dollarsInFlight
+      casesForICUByRequestedTime,
+      casesForVentilatorsByRequestedTime,
+      dollarsInFlight
     },
     severeImpact: {
       currentlyInfected: severeCurrentlyInfected,
       infectionsByRequestedTime: severeInfectionsByRequestedTime,
       severeCasesByRequestedTime: severeImpactSevereCasesByRequestedTime,
       hospitalBedsByRequestedTime: severeHospitalBedsByRequestedTime,
-      casesForICUByRequestedTime: severeCasesForICUByRequestedTime
-      // casesForVentilatorsByRequestedTime: severeCasesForVentilatorsByRequestedTime,
-      // dollarsInFlight: severeDollarsInFlight
+      casesForICUByRequestedTime: severeCasesForICUByRequestedTime,
+      casesForVentilatorsByRequestedTime: severeCasesForVentilatorsByRequestedTime,
+      dollarsInFlight: severeDollarsInFlight
     }
   };
 };
