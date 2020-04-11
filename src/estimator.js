@@ -21,6 +21,11 @@ const getInfectionsByRequestedTime = (periodType, timeToElapse) => {
   return (2 ** Math.trunc(noOfDays));
 };
 
+const getHospialBedsByRequestedTime = (bedSpaces, casesByRequestedTime) => {
+  const availableBedSpace = bedSpaces * 0.35;
+  return (Math.trunc(availableBedSpace - casesByRequestedTime));
+};
+
 const covid19ImpactEstimator = (data) => {
   const currentlyInfected = data.reportedCases * 10;
   const severeCurrentlyInfected = data.reportedCases * 50;
@@ -34,13 +39,22 @@ const covid19ImpactEstimator = (data) => {
   );
   const impactSevereCasesByRequestedTime = infectionsByRequestedTime * 0.15;
   const severeImpactSevereCasesByRequestedTime = severeInfectionsByRequestedTime * 0.15;
-  const availableBedSpace = data.totalHospitalBeds * 0.35;
-  const hospitalBedsByRequestedTime = Math.trunc(
-    availableBedSpace - impactSevereCasesByRequestedTime
+  const hospitalBedsByRequestedTime = getHospialBedsByRequestedTime(
+    data.totalHospitalBeds,
+    impactSevereCasesByRequestedTime
   );
-  const severeHospitalBedsByRequestedTime = Math.trunc(
-    availableBedSpace - severeImpactSevereCasesByRequestedTime
+  const severeHospitalBedsByRequestedTime = getHospialBedsByRequestedTime(
+    data.totalHospitalBeds,
+    impactSevereCasesByRequestedTime
   );
+  const casesForICUByRequestedTime = infectionsByRequestedTime * 0.05;
+  const severeCasesForICUByRequestedTime = severeInfectionsByRequestedTime * 0.05;
+  const casesForVentilatorsByRequestedTime = infectionsByRequestedTime * 0.02;
+  const severeCasesForVentilatorsByRequestedTime = severeInfectionsByRequestedTime * 0.02;
+  const dollarsInFlight = Math.trunc((infectionsByRequestedTime
+    * data.region.avgDailyIncomePopulation) * data.region.avgDailyIncomeInUSD * noOfDays);
+  const severeDollarsInFlight = Math.trunc((severeInfectionsByRequestedTime
+    * data.region.avgDailyIncomePopulation) * data.region.avgDailyIncomeInUSD * noOfDays);
 
   return {
     data,
@@ -48,13 +62,19 @@ const covid19ImpactEstimator = (data) => {
       currentlyInfected,
       infectionsByRequestedTime,
       severeCasesByRequestedTime: impactSevereCasesByRequestedTime,
-      hospitalBedsByRequestedTime
+      hospitalBedsByRequestedTime,
+      casesForICUByRequestedTime,
+      casesForVentilatorsByRequestedTime,
+      dollarsInFlight
     },
     severeImpact: {
       currentlyInfected: severeCurrentlyInfected,
       infectionsByRequestedTime: severeInfectionsByRequestedTime,
       severeCasesByRequestedTime: severeImpactSevereCasesByRequestedTime,
-      hospitalBedsByRequestedTime: severeHospitalBedsByRequestedTime
+      hospitalBedsByRequestedTime: severeHospitalBedsByRequestedTime,
+      casesForICUByRequestedTime: severeCasesForICUByRequestedTime,
+      casesForVentilatorsByRequestedTime: severeCasesForVentilatorsByRequestedTime,
+      dollarsInFlight: severeDollarsInFlight
     }
   };
 };
